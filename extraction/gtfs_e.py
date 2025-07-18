@@ -74,12 +74,11 @@ for entity in feed.entity:
 vehicles_df = pd.DataFrame(vehicles)
 
 filename = f'part_{uuid.uuid4().hex}.parquet'
-output_path = f'./temp_pq_store/{filename}'
+output_path = f'./temp_pq_store/year={dt_local.year}/month={dt_local.month}/day={dt_local.day}/{filename}'
 
 vehicles_df.to_parquet(
     output_path,
     engine='fastparquet',
-    partition_cols=['year', 'month', 'day'],
     index=False
 )
 
