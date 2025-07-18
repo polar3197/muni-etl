@@ -1,5 +1,6 @@
 import pandas as pd
 import boto3
+import uuid
 import shutil
 import os
 import requests
@@ -71,8 +72,12 @@ for entity in feed.entity:
 
 # convert data -> Pandas -> Parquet
 vehicles_df = pd.DataFrame(vehicles)
-vehicles_pq = vehicles_df.to_parquet(
-    './temp_pq_store',
+
+filename = f'part_{uuid.uuid4().hex}.parquet'
+output_path = f'./temp_pq_store/{filename}'
+
+vehicles_df.to_parquet(
+    output_path,
     engine='fastparquet',
     partition_cols=['year', 'month', 'day'],
     index=False
