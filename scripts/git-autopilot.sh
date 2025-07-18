@@ -9,5 +9,5 @@ git push
 
 # Step 2: SSH into the Pi and pull
 echo "Pulling latest changes on remote Pi..."
-ssh caddy "cd ~/rpi-spark-cluster && git pull"
-ssh quentin "cd ~/rpi-spark-cluster && git pull"
+ssh caddy "cd ~/muni-etl && git pull"
+ssh quentin "cd ~/muni-etl && git pull"
