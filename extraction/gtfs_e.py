@@ -75,6 +75,7 @@ vehicles_df = pd.DataFrame(vehicles)
 
 filename = f'part_{uuid.uuid4().hex}.parquet'
 output_path = f'./temp_pq_store/year={dt_local.year}/month={dt_local.month}/day={dt_local.day}/{filename}'
+os.makedirs(os.path.dirname(output_path), exist_ok=True)
 
 vehicles_df.to_parquet(
     output_path,
