@@ -1,8 +1,8 @@
 #!/bin/bash
 
 WORKERS=(caddy quentin)
-LOCAL_PROJECT_DIR="$HOME/Code/projects/rpi-cluster"
-REMOTE_PROJECT_DIR="~/rpi-spark-cluster"
+LOCAL_PROJECT_DIR="$HOME/Code/projects/transit-etl/spark-cluster"
+REMOTE_PROJECT_DIR="~/muni-etl/spark-cluster"
 
 ACTION="$1"
 
