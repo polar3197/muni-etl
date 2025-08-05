@@ -16,7 +16,7 @@ else
   echo "[spark-env.sh] SPARK_LOCAL_IP=$SPARK_LOCAL_IP"
 
   export SPARK_PUBLIC_DNS="$LOCAL_IP"  # So master can reach this worker
-  export SPARK_MASTER_URL="spark://192.168.0.32:7077"
+  export SPARK_MASTER_URL="spark://192.168.0.143:7077"
   # export SPARK_WORKER_CORES=${SPARK_WORKER_CORES:-2}
   # export SPARK_WORKER_MEMORY=${SPARK_WORKER_MEMORY:-2g}
 
