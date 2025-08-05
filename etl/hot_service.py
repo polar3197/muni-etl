@@ -5,6 +5,15 @@ import os
 
 app = FastAPI()
 
+# Enable CORS for any origin (safest for dev)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # or specify ["http://localhost:4000"] etc.
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # mounted on RPi's 128GB ssd drive
 HOT_DATA_PATH = "/mnt/ssd/hot/map_data.json"
 
