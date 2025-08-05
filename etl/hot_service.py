@@ -1,23 +1,22 @@
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 import json
 import os
 
 app = FastAPI()
 
-# Enable CORS for any origin (safest for dev)
+# Add this to allow cross-origin requests from anywhere
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # or specify ["http://localhost:4000"] etc.
+    allow_origins=["*"],  # You can restrict this to specific IPs/domains later
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# mounted on RPi's 128GB ssd drive
 HOT_DATA_PATH = "/mnt/ssd/hot/map_data.json"
 
-# when someone runs get on /hot-data, run the following code
 @app.get("/hot-data")
 async def get_hot_data():
     if not os.path.exists(HOT_DATA_PATH):
