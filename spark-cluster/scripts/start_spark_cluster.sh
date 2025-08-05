@@ -1,7 +1,7 @@
 #!/bin/bash
 
 WORKERS=(quentin)
-LOCAL_PROJECT_DIR="~/muni-etl/spark-cluster"
+LOCAL_PROJECT_DIR="{$HOME}/muni-etl/spark-cluster"
 REMOTE_PROJECT_DIR="~/muni-etl/spark-cluster"
 
 ACTION="$1"
@@ -13,14 +13,14 @@ if [[ "$ACTION" == "-up" ]]; then
     ssh "$WORKER" "cd $REMOTE_PROJECT_DIR && docker compose up -d --build spark-worker"
   done
 
-  echo "Starting Spark master on Mac..."
+  echo "Starting Spark master on Caddy..."
   cd "$LOCAL_PROJECT_DIR" || exit 1
   docker compose up -d --build spark-master
 
   echo "Spark cluster started."
 
 elif [[ "$ACTION" == "-down" ]]; then
-  echo "Stopping Spark master on Mac..."
+  echo "Stopping Spark master on Caddy..."
   cd "$LOCAL_PROJECT_DIR" || exit 1
   docker compose down
 
