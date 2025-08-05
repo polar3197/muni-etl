@@ -16,11 +16,11 @@ services:
       - ./conf/spark-env.sh:/opt/spark/conf/spark-env.sh
       - /mnt/ssd:/data  # Mount your SSD for data access
 
-  spark-worker-local:
+  spark-worker:
     build: 
       context: .
       dockerfile: worker/Dockerfile
-    container_name: spark-worker-local
+    container_name: spark-worker
     network_mode: "host"
     ports:
       - "7078:7078"
