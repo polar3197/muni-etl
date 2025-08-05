@@ -1,7 +1,7 @@
 #!/bin/bash
 
 WORKERS=(quentin)
-LOCAL_PROJECT_DIR="{$HOME}/muni-etl/spark-cluster"
+LOCAL_PROJECT_DIR="$HOME/muni-etl/spark-cluster"
 REMOTE_PROJECT_DIR="~/muni-etl/spark-cluster"
 
 ACTION="$1"
