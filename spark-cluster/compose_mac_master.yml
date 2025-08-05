@@ -2,32 +2,32 @@ services:
   spark-master:
     build: 
       context: .
-      dockerfile: master/Dockerfile_pi  # Create this
+      dockerfile: master/Dockerfile_mac
     container_name: spark-master
     ports:
       - "7077:7077"
       - "8080:8080"
     environment:
       - SPARK_MODE=master
-      - SPARK_MASTER_HOST=192.168.0.143  # Caddy IP
-      - SPARK_PUBLIC_DNS=192.168.0.143   # Caddy IP
+      - SPARK_MASTER_HOST=192.168.0.32
+      - SPARK_PUBLIC_DNS=192.168.0.32
       - SPARK_LOCAL_IP=0.0.0.0
     volumes:
       - ./conf/spark-env.sh:/opt/spark/conf/spark-env.sh
-      - /mnt/ssd:/data  # Mount your SSD for data access
 
-  spark-worker-local:
+  spark-worker:
     build: 
       context: .
       dockerfile: worker/Dockerfile
-    container_name: spark-worker-local
+    container_name: spark-worker
     network_mode: "host"
     ports:
       - "7078:7078"
       - "8081:8081"
     environment:
       - SPARK_MODE=worker
-      - SPARK_MASTER_HOST=192.168.0.143  # Caddy IP (same as master)
+      - SPARK_MASTER_HOST=192.168.0.32
     volumes:
       - ./conf/spark-env.sh:/opt/spark/conf/spark-env.sh
-      - /mnt/ssd:/data  # Access to data
+
+

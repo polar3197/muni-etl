@@ -1,15 +1,11 @@
-FROM --platform=linux/arm64 python:3.10-slim
+FROM python:3.10-slim
 
 # Install dependencies, download & extract Spark, cleanup
 ENV SPARK_VERSION="3.5.6"
-ENV JAVA_HOME="/usr/lib/jvm/java-17-openjdk-arm64"
+ENV JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64"
 ENV SPARK_HOME="/opt/spark"
 ENV PYSPARK_PYTHON="python3"
 ENV PATH="${JAVA_HOME}/bin:${SPARK_HOME}/sbin:${SPARK_HOME}/bin:$PATH"
-
-ENV HADOOP_AWS_VERSION=3.3.2
-ENV AWS_BUNDLE_VERSION=1.11.1026
-ENV SPARK_JARS_DIR=$SPARK_HOME/jars
 
 EXPOSE 7077 8080
 
@@ -48,9 +44,8 @@ RUN pip install --no-cache-dir pyspark
 
 # Configuration scripts
 COPY conf/spark-env.sh ${SPARK_HOME}/conf/spark-env.sh
-COPY conf/spark-env.sh ${SPARK_HOME}/conf/spark-env.sh
-COPY worker/start-worker.sh /opt/start-worker.sh
+COPY master/start-master.sh /opt/start-master.sh
 
-RUN chmod +x ${SPARK_HOME}/conf/spark-env.sh /opt/start-worker.sh
+RUN chmod +x ${SPARK_HOME}/conf/spark-env.sh /opt/start-master.sh
 
-CMD ["/opt/start-worker.sh"]
+CMD ["/opt/start-master.sh"]

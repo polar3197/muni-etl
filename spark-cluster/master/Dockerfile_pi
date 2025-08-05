@@ -1,4 +1,4 @@
-FROM python:3.10-slim
+FROM --platform=linux/arm64 python:3.10-slim
 
 # Install dependencies, download & extract Spark, cleanup
 ENV SPARK_VERSION="3.5.6"
@@ -9,12 +9,12 @@ ENV PATH="${JAVA_HOME}/bin:${SPARK_HOME}/sbin:${SPARK_HOME}/bin:$PATH"
 
 EXPOSE 7077 8080
 
+# Install dependencies and Spark
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         openjdk-17-jre-headless \
         curl \
         wget \
-        vim \
         ca-certificates \
         gnupg \
         procps \
@@ -23,22 +23,27 @@ RUN apt-get update && \
     curl -L -o /tmp/spark.tgz https://dlcdn.apache.org/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop3.tgz && \
     tar -xzf /tmp/spark.tgz -C /opt && \
     mv /opt/spark-${SPARK_VERSION}-bin-hadoop3 ${SPARK_HOME} && \
-    rm /tmp/spark.tgz && \
-    rm -rf ${SPARK_HOME}/examples \
-           ${SPARK_HOME}/jars/*mesos* \
-           ${SPARK_HOME}/jars/*kubernetes* \
-           ${SPARK_HOME}/jars/*hive* \
-           #${SPARK_HOME}/jars/*avro* \
-           ${SPARK_HOME}/jars/*parquet* \
-           ${SPARK_HOME}/jars/*orc*
+    rm /tmp/spark.tgz
+    # rm -rf ${SPARK_HOME}/examples \
+    #        ${SPARK_HOME}/jars/*mesos* \
+    #        ${SPARK_HOME}/jars/*kubernetes* \
+    #        ${SPARK_HOME}/jars/*hive* \
+    #        ${SPARK_HOME}/jars/*avro* \
+    #        ${SPARK_HOME}/jars/*parquet* \
+    #        ${SPARK_HOME}/jars/*orc*
+
+
+# Download AWS and Hadoop JARs into Spark
+RUN curl -L -o ${SPARK_JARS_DIR}/hadoop-aws-${HADOOP_AWS_VERSION}.jar \
+      https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/${HADOOP_AWS_VERSION}/hadoop-aws-${HADOOP_AWS_VERSION}.jar && \
+    curl -L -o ${SPARK_JARS_DIR}/aws-java-sdk-bundle-${AWS_BUNDLE_VERSION}.jar \
+      https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/${AWS_BUNDLE_VERSION}/aws-java-sdk-bundle-${AWS_BUNDLE_VERSION}.jar
 
 # Install PySpark
 RUN pip install --no-cache-dir pyspark
 
 # Configuration scripts
-COPY conf/spark-env.sh ${SPARK_HOME}/conf/spark-env.sh
 COPY master/start-master.sh /opt/start-master.sh
-
-RUN chmod +x ${SPARK_HOME}/conf/spark-env.sh /opt/start-master.sh
+RUN chmod +x /opt/start-master.sh
 
 CMD ["/opt/start-master.sh"]
