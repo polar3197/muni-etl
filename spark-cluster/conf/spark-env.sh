@@ -2,7 +2,7 @@
 
 if [[ "$SPARK_MODE" == "master" ]]; then
   export SPARK_LOCAL_IP=0.0.0.0
-  export SPARK_PUBLIC_DNS=192.168.0.32
+  export SPARK_PUBLIC_DNS=192.168.0.143
   echo "[spark-env.sh] Configuring Spark MASTER node"
   echo "[spark-env.sh] SPARK_PUBLIC_DNS=$SPARK_PUBLIC_DNS"
   echo "[spark-env.sh] SPARK_LOCAL_IP=$SPARK_LOCAL_IP"
