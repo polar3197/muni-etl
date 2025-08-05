@@ -78,4 +78,4 @@ while True:
         print(f"[{datetime.now().isoformat()}] Saved {len(vehicles)} vehicles")
     except Exception as e:
         print("Error:", e)
-    time.sleep(5)  # wait 30 seconds before next fetch
+    time.sleep(5)  # wait 5 seconds before next fetch
