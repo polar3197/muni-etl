@@ -1,6 +1,7 @@
 import pandas as pd
 import boto3
 import uuid
+import time
 import shutil
 import os
 import requests
@@ -26,6 +27,7 @@ for entity in feed.entity:
     if entity.HasField("vehicle"):
         v = entity.vehicle
 
+        # collect time information
         dt = datetime.fromtimestamp(v.timestamp, tz=timezone.utc)
         local_tz = pytz.timezone("America/Los_Angeles")
         dt_local = dt.astimezone(local_tz)
@@ -68,15 +70,13 @@ for entity in feed.entity:
         }
         vehicles.append(vehicle)
         count += 1
-        # print(vehicle_json)
 
 # convert data -> Pandas -> Parquet
 vehicles_df = pd.DataFrame(vehicles)
-
+print(vehicles_df)
 filename = f'part_{uuid.uuid4().hex}.parquet'
 output_path = f'./temp_pq_store/year={dt_local.year}/month={dt_local.month}/day={dt_local.day}/{filename}'
 os.makedirs(os.path.dirname(output_path), exist_ok=True)
-
 vehicles_df.to_parquet(
     output_path,
     engine='fastparquet',
@@ -86,16 +86,21 @@ vehicles_df.to_parquet(
 # push parquet file to S3 bucket
 local_dir = './temp_pq_store'
 bucket_name = 'muni-parquet-data'
-
 s3 = boto3.client('s3')
-
 for root, dirs, files in os.walk(local_dir):
     for file in files:
         local_path = os.path.join(root, file)
         relative_path = os.path.relpath(local_path, local_dir)
-        s3_key = relative_path.replace("\\", "/")  # Windows fix
-
+        s3_key = relative_path.replace("\\", "/")
         print(f"Uploading {local_path} to s3://{bucket_name}/{s3_key}")
+
+        # file_size_bytes = os.path.getsize(local_path)
+        # file_size_mb = file_size_bytes / (1024 * 1024)
+        # print(f"\nUploading {local_path} ({file_size_mb:.2f} MB) to s3://{bucket_name}/{s3_key}")
+        # start = time.time()
         s3.upload_file(local_path, bucket_name, s3_key)
+        # elapsed = time.time() - start
+        # speed_mbps = (file_size_bytes / 1024 / 1024) / elapsed if elapsed > 0 else 0
+        # print(f"Uploaded in {elapsed:.2f} seconds @ {speed_mbps:.2f} MB/s")
 
 shutil.rmtree('./temp_pq_store', ignore_errors=True)
