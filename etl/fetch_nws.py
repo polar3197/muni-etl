@@ -23,8 +23,9 @@ try:
 
     timestamp_dt = datetime.fromisoformat(weather_json["timestamp_iso"])
     timestamp_str = timestamp_dt.strftime("%Y%m%d_%H%M%S")
-    parquet_filename = f"vehicles_{timestamp_str}.parquet"
+    parquet_filename = f"weather_{timestamp_str}.parquet"
     # translate to parquet
+    print(output_dir)
     df.to_parquet(os.path.join(output_dir, parquet_filename))
 
 except Exception as e:
