@@ -25,7 +25,7 @@ try:
     timestamp_str = timestamp_dt.strftime("%Y%m%d_%H%M%S")
     parquet_filename = f"vehicles_{timestamp_str}.parquet"
     # translate to parquet
-    df.to_parquet(os.path.join(output_dir, parquet_filename), engine="fastparquet")
+    df.to_parquet(os.path.join(output_dir, parquet_filename))
 
 except Exception as e:
     print("Error:", e)
