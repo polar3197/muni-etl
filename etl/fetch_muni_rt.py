@@ -6,9 +6,6 @@ from google.transit import gtfs_realtime_pb2
 from datetime import datetime, timezone
 import pandas as pd
 import requests
-# import uuid
-# import time
-# import shutil
 import os
 import json
 import pytz
@@ -17,7 +14,7 @@ output_dir = os.getenv("MUNI_RT_DATA_PATH")
 
 try:
     # Fetch Protocol Buffer contents from MUNI API
-    url = "http://api.511.org/transit/vehiclepositions?api_key=59a9ae05-3f9c-440e-8343-e3256be79b84&agency=SF"
+    url = "http://api.511.org/transit/vehiclepositions?api_key=5e6bf5d8-1d98-4eb3-b927-69dcab843474&agency=SF"
     response = requests.get(url)
 
     feed = gtfs_realtime_pb2.FeedMessage()
