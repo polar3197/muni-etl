@@ -1,15 +1,19 @@
+
+# Fetches and parses pb file from GTFS into df and then parquet 
+# and stores in $RT_MUNI_PATH
+
+from google.transit import gtfs_realtime_pb2
+from datetime import datetime, timezone
 import pandas as pd
-import uuid
-import time
-import shutil
+import requests
+# import uuid
+# import time
+# import shutil
 import os
 import json
-import requests
-from datetime import datetime, timezone
-from google.transit import gtfs_realtime_pb2
 import pytz
 
-output_dir = "/mnt/ssd/model_data/"
+output_dir = os.getenv("MUNI_RT_DATA_PATH")
 
 try:
     # Fetch Protocol Buffer contents from MUNI API
@@ -70,10 +74,12 @@ try:
             }
             vehicles.append(vehicle)
             count += 1
-
-    # Write to disk
-    with open(os.path.join(output_dir, "map_data.json"), "w") as f:
-        json.dump(vehicles, f, indent=2)
-    print(f"[{datetime.now().isoformat()}] Saved {len(vehicles)} vehicles")
+    if vehicles:
+        latest_datetime = max(datetime.fromisoformat(v["timestamp_iso"]) for v in vehicles)
+        timestamp_str = latest_datetime.strftime("%Y%m%d_%H%M%S")
+        parquet_filename = f"vehicles_{timestamp_str}.parquet"
+        df = pd.DataFrame(vehicles)
+        # translate to parquet
+        df.to_parquet(os.path.join(output_dir, parquet_filename), engine="pyarrow")
 except Exception as e:
     print("Error:", e)
