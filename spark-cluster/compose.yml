@@ -14,7 +14,7 @@ services:
       - SPARK_LOCAL_IP=0.0.0.0
     volumes:
       - ./conf/spark-env.sh:/opt/spark/conf/spark-env.sh
-      - /mnt/ssd:/data  # Mount your SSD for data access
+      # - /mnt/ssd:/data  # Mount your SSD for data access
 
   spark-worker:
     build: 
