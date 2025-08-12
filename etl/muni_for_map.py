@@ -70,10 +70,19 @@ try:
             vehicles.append(vehicle)
 
     if vehicles:
-        # Write to disk
+        # HOT -- gets overwritten
         with open(os.path.join(hot_output_dir, "map_data.json"), "w") as f:
             json.dump(vehicles, f, indent=2)
         print(f"[{datetime.now().isoformat()}] Saved {len(vehicles)} vehicles")
+
+        # latest_datetime = max(datetime.fromisoformat(v["timestamp_iso"]) for v in vehicles)
+        # timestamp_str = latest_datetime.strftime("%Y%m%d_%H%M%S")
+        # filename = f"vehicles_{timestamp_str}.json"
+        # vehicles_json = json.dumps(vehicles)
+        # # write pretty formatted json to '/output_dir/filename'
+        # with open(os.path.join(output_dir, filename), 'w') as f:
+        #     json.dump(vehicles, f, indent=2)
+        # print(f"[{datetime.now().isoformat()}] Saved {len(vehicles)} vehicles")
 
 except Exception as e:
     print("Error:", e)

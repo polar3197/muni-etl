@@ -1,31 +1,28 @@
 
+from airflow.decorators import dag, task
 from datetime import datetime, timedelta
-from airflow.decorators import dag
-from airflow.operators.bash import BashOperator
-import os
+import subprocess
 
 @dag(
-    dag_id='weather_update_pipeline',
-    start_date=datetime(2025, 1, 1),
+    dag_id='weather_pipeline',
     schedule=timedelta(minutes=30),
+    start_date=datetime(2025, 8, 8),
     catchup=False,
-    max_active_runs=1,
-    default_args={
-        'retries': 3,
-    }
+    max_active_runs=1
 )
-def weather_pipeline():
-    """Weather data pipeline DAG"""
+def weather_dag():
+    @task
+    def fetch_weather():
+        result = subprocess.run([
+            'python3', '/home/charlie.c/transit-etl/etl/weather_for_stats.py'
+        ], capture_output=True, text=True)
+        
+        if result.returncode != 0:
+            raise Exception(f"Weather script failed: {result.stderr}")
+        
+        print(result.stdout)
+        return "Weather updated"
     
-    run_weather_script = BashOperator(
-        task_id='fetch_weather_data',
-        bash_command='cd /path/to/your/scripts && WEATHER_DATA_PATH=/mnt/ssd/weather python3 weather_script.py',
-        env={
-            'WEATHER_DATA_PATH': '/mnt/ssd/weather'
-        }
-    )
-    
-    return run_weather_script
+    fetch_weather()
 
-# Instantiate the DAG
-weather_pipeline()
+weather_dag()
