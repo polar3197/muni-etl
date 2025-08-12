@@ -7,7 +7,7 @@ import requests
 import json
 import os
 
-output_dir = os.getenv("WEATHER_DATA_PATH")
+output_dir = '/mnt/ssd/weather/'
 
 try:
     url = "https://api.openweathermap.org/data/2.5/weather?lat=37.7749&lon=-122.4194&appid=b238d81d1a09771d9a8fed72e8db6fd6"
@@ -15,18 +15,11 @@ try:
     if response.status_code != 200:
         raise ValueError(f"Weather API call failed: {response.status_code} - {response.text}")
     
-    weather_json = response.json()
-    local_dt = datetime.fromtimestamp(weather_json["dt"])
-    weather_json["timestamp_iso"] = local_dt.isoformat()
-
-    df = pd.json_normalize(weather_json)
-
-    timestamp_dt = datetime.fromisoformat(weather_json["timestamp_iso"])
-    timestamp_str = timestamp_dt.strftime("%Y%m%d_%H%M%S")
-    parquet_filename = f"weather_{timestamp_str}.parquet"
-    # translate to parquet
-    print(output_dir)
-    df.to_parquet(os.path.join(output_dir, parquet_filename))
+    weather_dict = response.json()
+    local_dt = datetime.fromtimestamp(weather_dict["dt"])
+    weather_dict["timestamp_iso"] = local_dt.isoformat()
+    with open(os.path.join(output_dir, "curr_weather.json"), 'w') as f:
+        json.dump(weather_dict, f, indent=2)
 
 except Exception as e:
     print("Error:", e)
