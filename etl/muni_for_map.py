@@ -4,8 +4,8 @@ import os
 import subprocess
 import json
 import requests
-from datetime import datetime, timezone
 from google.transit import gtfs_realtime_pb2
+from datetime import datetime, timezone
 import pytz
 
 hot_output_dir = "/mnt/ssd/hot/"
@@ -43,11 +43,11 @@ try:
             vehicle = {
                 # time data
                 "timestamp_iso": dt_local.isoformat(),
-                "year": dt_local.year,
-                "month": dt_local.month,
-                "day": dt_local.day,
-                "hour": dt_local.hour,
-                "minute": dt_local.minute,
+                # "year": dt_local.year,
+                # "month": dt_local.month,
+                # "day": dt_local.day,
+                # "hour": dt_local.hour,
+                # "minute": dt_local.minute,
                 
                 # trip data
                 "trip_id": trip_id,
@@ -60,7 +60,7 @@ try:
                 "vehicle_id": v.vehicle.id,
                 "latitude": v.position.latitude,
                 "longitude": v.position.longitude,
-                #"bearing": v.position.bearing,
+                "bearing": v.position.bearing,
                 "speed_mps": v.position.speed,
                 "current_stop_sequence": v.current_stop_sequence,
                 "current_status": v.current_status,

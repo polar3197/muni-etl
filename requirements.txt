@@ -2,4 +2,8 @@ pandas>=1.5.0
 requests>=2.28.0
 psycopg2-binary>=2.9.0
 protobuf>=4.21.0
+gtfs-realtime-bindings
+psycopg2
 pytz>=2022.7
+python-dotenv
+postgis
